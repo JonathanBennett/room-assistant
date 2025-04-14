@@ -30,6 +30,8 @@ jobs:
         with:
           node-version: 20.x
           cache: 'yarn'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@jonathanbennett'
 
       - name: Install Yarn
         run: corepack enable

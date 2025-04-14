@@ -1,10 +1,13 @@
 {
-  "name": "room-assistant",
+  "name": "@jonathanbennett/room-assistant",
   "version": "2.20.0",
   "description": "Presence tracking and more for automation on the room-level",
   "author": "Heiko Rothe <me@heikorothe.com> (https://heikorothe.com)",
   "license": "MIT",
   "repository": "github:mKeRix/room-assistant",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "keywords": [
     "smart home",
     "home automation",
