@@ -1,5 +1,5 @@
 import { randomInt } from '../../util/numbers';
-import * as Joi from 'joi';
+import Joi from 'joi';
 import * as jf from 'joiful';
 
 class TagOverride {

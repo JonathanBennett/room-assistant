@@ -5,21 +5,26 @@
 	"build": {
 		"dockerfile": "Dockerfile",
 		// Update 'VARIANT' to pick a Node version: 10, 12, 14
-		"args": { "VARIANT": "16" }
+		"args": { "VARIANT": "22" }
 	},
 
 	// Set *default* container specific settings.json values on container create.
-	"settings": {
-		"terminal.integrated.shell.linux": "/bin/bash"
+	// "settings": {
+	// 	"terminal.integrated.shell.linux": "/bin/bash"
+	// },
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.shell.linux": "/bin/bash"
+			},
+			"extensions": [
+				"dbaeumer.vscode-eslint",
+				"ms-vscode.vscode-typescript-tslint-plugin",
+				"Orta.vscode-jest",
+				"adam-bender.commit-message-editor"
+			]
+		}
 	},
-
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"dbaeumer.vscode-eslint",
-		"ms-vscode.vscode-typescript-tslint-plugin",
-		"Orta.vscode-jest",
-		"adam-bender.commit-message-editor"
-	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [6415, 6425, 8080],

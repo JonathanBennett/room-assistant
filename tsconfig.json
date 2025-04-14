@@ -3,18 +3,21 @@
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "target": "es2019",
-    "lib": ["es2020"],
+    "lib": ["es2020", "DOM"],
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
       "democracy": ["typings/democracy"]
     },
+    "types": ["node", "canvas"],
     "incremental": true
   },
   "exclude": ["node_modules", "dist"]

@@ -21,7 +21,7 @@ export abstract class Entity {
   })
   state: string | number | boolean | Buffer;
 
-  @ApiProperty({ type: 'object' })
+  @ApiProperty({ type: 'object', additionalProperties: true })
   attributes: { [key: string]: any } = {};
 
   readonly distributed: boolean;

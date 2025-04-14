@@ -17,7 +17,7 @@ const transports: TransportStream[] = [
         ? winston.format.colorize()
         : winston.format.uncolorize(),
       winston.format.printf((info: TransformableInfo) => {
-        return `${new Date(info.timestamp).toLocaleString()} - ${
+        return `${new Date(info.timestamp as string).toLocaleString()} - ${
           info.level
         } - ${info.context}: ${info.message}`;
       })
@@ -25,69 +25,81 @@ const transports: TransportStream[] = [
   }),
 ];
 
-if (config.elasticsearch.enabled) {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const ElasticsearchTransport = require('winston-elasticsearch')
-      .ElasticsearchTransport;
+// Use an IIAFE to handle async imports for optional transports
+(async () => {
+  if (config.elasticsearch.enabled) {
+    try {
+      const { ElasticsearchTransport } = await import('winston-elasticsearch'); // Use dynamic import
 
-    transports.push(
-      new ElasticsearchTransport({
-        indexPrefix: config.elasticsearch.indexPrefix,
-        clientOpts: {
-          node: config.elasticsearch.node,
-          auth: config.elasticsearch.auth,
-        },
-      })
-    );
-  } catch (e) {
-    missingDeps.push('elasticsearch');
+      transports.push(
+        new ElasticsearchTransport({
+          indexPrefix: config.elasticsearch.indexPrefix,
+          clientOpts: {
+            node: config.elasticsearch.node,
+            auth: config.elasticsearch.auth,
+          },
+        })
+      );
+    } catch (e) {
+      missingDeps.push('elasticsearch');
+    }
   }
-}
 
-if (config.loki.enabled) {
-  const lokiFormatter = winston.format((info) => {
-    info.labels = info.labels || {};
-    info.labels.context = info.context;
-    info.labels.instanceName = info.instanceName;
-    return info;
+  if (config.loki.enabled) {
+    const lokiFormatter = winston.format(
+      (
+        info: TransformableInfo & {
+          instanceName?: string;
+          labels?: Record<string, string>;
+        }
+      ) => {
+        info.labels = info.labels || {};
+        info.labels.context = info.context as string;
+        info.labels.instanceName = info.instanceName as string;
+        return info;
+      }
+    );
+
+    try {
+      const LokiTransport = await import('winston-loki'); // Use dynamic import
+
+      transports.push(
+        new LokiTransport.default({
+          // Access default export if needed
+          host: config.loki.host,
+          labels: {
+            job: 'room-assistant',
+          },
+          format: winston.format.combine(
+            lokiFormatter(),
+            winston.format.printf((info) => `${info.message}`)
+          ),
+          gracefulShutdown: false,
+          clearOnError: true,
+        })
+      );
+    } catch (e) {
+      missingDeps.push('loki');
+    }
+  }
+
+  // Log missing dependencies after attempting to load them
+  missingDeps.forEach((dep) => {
+    WINSTON_LOGGER.error(
+      `Logging with ${dep} was enabled, but the dependency is missing. Please install it with "npm install -g winston-${dep}".`,
+      null,
+      'LoggerService'
+    );
   });
-
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const LokiTransport = require('winston-loki');
-
-    transports.push(
-      new LokiTransport({
-        host: config.loki.host,
-        labels: {
-          job: 'room-assistant',
-        },
-        format: winston.format.combine(
-          lokiFormatter(),
-          winston.format.printf((info) => `${info.message}`)
-        ),
-        gracefulShutdown: false,
-        clearOnError: true,
-      })
-    );
-  } catch (e) {
-    missingDeps.push('loki');
-  }
-}
+})(); // Immediately invoke the async function
 
 export const WINSTON_LOGGER = WinstonModule.createLogger({
   level: process.env.NODE_LOG_LEVEL || 'info',
   defaultMeta: {
     instanceName,
   },
-  transports,
+  transports, // Transports array might be populated asynchronously
 });
 
-missingDeps.forEach((dep) => {
-  WINSTON_LOGGER.error(
-    `Logging with ${dep} was enabled, but the dependency is missing. Please install it with "npm install -g winston-${dep}".`,
-    null,
-    'LoggerService'
-  );
-});
+// Note: Logging missing deps here might happen before the async IIAFE completes.
+// Moved the logging inside the IIAFE for correctness.

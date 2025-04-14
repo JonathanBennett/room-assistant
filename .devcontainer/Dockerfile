@@ -1,6 +1,6 @@
 # See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.134.1/containers/typescript-node/.devcontainer/base.Dockerfile
 ARG VARIANT="14"
-FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:0-${VARIANT}
+FROM mcr.microsoft.com/devcontainers/typescript-node:${VARIANT}
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
@@ -13,4 +13,4 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 
 # [Optional] Uncomment if you want to install more global node packages
 # Upgrade npm to v7
-RUN sudo -u node npm install -g npm@7
+RUN sudo -u node npm install -g npm
