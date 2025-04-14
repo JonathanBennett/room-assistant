@@ -4,7 +4,7 @@
   "description": "Presence tracking and more for automation on the room-level",
   "author": "Heiko Rothe <me@heikorothe.com> (https://heikorothe.com)",
   "license": "MIT",
-  "repository": "github:mKeRix/room-assistant",
+  "repository": "github:jonathanbennett/room-assistant",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
@@ -17,8 +17,8 @@
     "thermopile"
   ],
   "homepage": "https://www.room-assistant.io",
-  "bugs": "https://github.com/mKeRix/room-assistant/issues",
-  "funding": "https://github.com/mKeRix/room-assistant?sponsor=1",
+  "bugs": "https://github.com/jonathanbennett/room-assistant/issues",
+  "funding": "https://github.com/jonathanbennett/room-assistant?sponsor=1",
   "bin": "./bin/room-assistant.js",
   "main": "dist/src/main.js",
   "types": "dist/src/main.d.ts",
