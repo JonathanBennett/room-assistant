@@ -11,49 +11,42 @@ on:
     paths-ignore:
       - 'docs/**'
 
+permissions:
+  contents: read
+  checks: write # Required for codecov to create check annotations
+
 jobs:
   lint:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
-      - name: Cache Node.js modules
-        uses: actions/cache@v2.1.7
-        with:
-          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-          key: ${{ runner.OS }}-node-16.x-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-16.x
-            ${{ runner.OS }}-
+          node-version: 20.x
+          cache: 'npm'
+
       - name: Install dependencies
         run: npm ci
       - name: Lint the code
         run: npm run lint --if-present
+
   test:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [16.x, 18.x, 20.x] # Updated Node.js versions
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cache Node.js modules
-        uses: actions/cache@v2.1.7
-        with:
-          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-          key: ${{ runner.OS }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-${{ matrix.node-version }}
-            ${{ runner.OS }}-
+          cache: 'npm'
+
       - name: Install dependencies
         run: npm ci
       - name: Build the project
@@ -63,8 +56,8 @@ jobs:
         env:
           CI: true
       - name: Upload code coverage
-        uses: codecov/codecov-action@v2.1.0
-        if: matrix.node-version == '16.x'
+        uses: codecov/codecov-action@v4
+        if: matrix.node-version == '20.x' # Updated condition
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: Node.js ${{ matrix.node-version }}

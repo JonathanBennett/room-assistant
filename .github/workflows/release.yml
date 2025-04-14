@@ -34,33 +34,31 @@ jobs:
         uses: actions/setup-node@v4 # Updated version
         with:
           node-version: 20.x
-          cache: 'npm' # Use built-in caching
+          cache: 'yarn' # Use yarn for caching
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@jonathanbennett' # Adjust this to match your GitHub username/org
 
-      # Removed explicit actions/cache step, using setup-node's built-in caching
+      - name: Install Yarn
+        run: corepack enable
 
-      - name: Setup .npmrc for GitHub Packages # New step
-        # Sets up npm to publish to GitHub Packages using the GITHUB_TOKEN
-        run: echo "//npm.pkg.github.com/:_authToken=\${{ secrets.GITHUB_TOKEN }}" > .npmrc
+      # Setup .yarnrc.yml for GitHub Packages
+      - name: Setup Yarn for GitHub Packages
+        run: |
+          yarn config set npmRegistryServer "https://npm.pkg.github.com"
+          yarn config set npmAlwaysAuth true
+          yarn config set npmAuthToken "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --immutable
 
       - name: Create new release
         # Updated action version
-        # Assumes package.json's "publishConfig": { "registry": "https://npm.pkg.github.com/" } is set
-        # Uses GITHUB_TOKEN implicitly for auth via .npmrc
+        # Uses GITHUB_TOKEN implicitly for auth via yarn config
         uses: cycjimmy/semantic-release-action@v4
         id: semantic
-        # Removed extra_plugins assuming defaults work with .npmrc and package.json
-        # Add back necessary plugins if default preset isn't sufficient, e.g.,
-        # extra_plugins: |
-        #   @semantic-release/commit-analyzer
-        #   @semantic-release/release-notes-generator
-        #   @semantic-release/npm
-        #   @semantic-release/github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Removed NPM_TOKEN as GITHUB_TOKEN is used via .npmrc
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release-docker:
     runs-on: ubuntu-latest
