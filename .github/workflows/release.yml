@@ -2,10 +2,20 @@ name: Release
 
 on: workflow_dispatch
 
+# Permissions required for semantic-release to commit changes and publish to GitHub Packages,
+# and for Docker build/push to publish to GHCR and create attestations.
+permissions:
+  contents: write # Allow tagging and committing release changes by semantic-release
+  packages: write # Allow publishing npm package to GitHub Packages & Docker image to GHCR
+  id-token: write # Allow OIDC token generation for Docker provenance attestations
+
 jobs:
   release-npm:
     runs-on: ubuntu-latest
-
+    # Add permissions specific to this job (overrides top-level if needed, but inherits here)
+    # permissions:
+    #   contents: write
+    #   packages: write
     outputs:
       new_release_published: ${{ steps.semantic.outputs.new_release_published }}
       new_release_version: ${{ steps.semantic.outputs.new_release_version }}
@@ -14,63 +24,97 @@ jobs:
       HUSKY: '0'
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4 # Updated version
         with:
-          node-version: 16.x
-      - name: Cache Node.js modules
-        uses: actions/cache@v2.1.7
+          # Ensure we fetch tags for semantic-release
+          fetch-depth: 0
+          persist-credentials: false # Recommended for semantic-release to use GITHUB_TOKEN
+
+      - name: Use Node.js 20.x # Updated Node version
+        uses: actions/setup-node@v4 # Updated version
         with:
-          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-          key: ${{ runner.OS }}-node-16.x-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-16.x
-            ${{ runner.OS }}-
+          node-version: 20.x
+          cache: 'npm' # Use built-in caching
+
+      # Removed explicit actions/cache step, using setup-node's built-in caching
+
+      - name: Setup .npmrc for GitHub Packages # New step
+        # Sets up npm to publish to GitHub Packages using the GITHUB_TOKEN
+        run: echo "//npm.pkg.github.com/:_authToken=\${{ secrets.GITHUB_TOKEN }}" > .npmrc
+
       - name: Install dependencies
         run: npm ci
+
       - name: Create new release
-        uses: cycjimmy/semantic-release-action@v2
+        # Updated action version
+        # Assumes package.json's "publishConfig": { "registry": "https://npm.pkg.github.com/" } is set
+        # Uses GITHUB_TOKEN implicitly for auth via .npmrc
+        uses: cycjimmy/semantic-release-action@v4
         id: semantic
-        with:
-          extra_plugins: |
-            @semantic-release/git
+        # Removed extra_plugins assuming defaults work with .npmrc and package.json
+        # Add back necessary plugins if default preset isn't sufficient, e.g.,
+        # extra_plugins: |
+        #   @semantic-release/commit-analyzer
+        #   @semantic-release/release-notes-generator
+        #   @semantic-release/npm
+        #   @semantic-release/github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Removed NPM_TOKEN as GITHUB_TOKEN is used via .npmrc
 
   release-docker:
     runs-on: ubuntu-latest
     needs: release-npm
     if: needs.release-npm.outputs.new_release_published == 'true'
+    # Add permissions specific to this job (overrides top-level if needed, but inherits here)
+    permissions:
+      contents: read # Needed for checkout
+      packages: write # Needed to push to GHCR
+      attestations: write # Needed for Docker build attestations
+      id-token: write # Needed for Docker build attestations using OIDC
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
+      - uses: actions/checkout@v4 # Updated version
+
+      - name: Log in to GitHub Container Registry # Updated login action for GHCR
+        uses: docker/login-action@v3 # Updated version
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+          registry: ghcr.io
+          username: ${{ github.actor }} # Use the GitHub Actions token identity
+          password: ${{ secrets.GITHUB_TOKEN }} # Use the automatically generated token
+
+      - name: Set up QEMU # Updated version
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx # Updated version
+        uses: docker/setup-buildx-action@v3
+
+      # Replaced explicit cache step with build-push-action's cache handling
+
+      - name: Docker meta # New step: Generate tags and labels for GHCR
+        id: meta
+        uses: docker/metadata-action@v5 # Use metadata action
         with:
-          platforms: all
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+          # images format: ghcr.io/owner/repo (owner lowercased automatically by action)
+          images: ghcr.io/${{ github.repository }}
+          # Generate tags based on the semantic release version and 'latest'/'beta' logic
+          tags: |
+            type=semver,pattern={{version}},value=${{ needs.release-npm.outputs.new_release_version }}
+            type=raw,value=latest,enable=${{ !contains(needs.release-npm.outputs.new_release_version, 'beta') }}
+            type=raw,value=beta,enable=${{ contains(needs.release-npm.outputs.new_release_version, 'beta') }}
+
+      - name: Build and push Docker image # Updated build/push step
+        uses: docker/build-push-action@v6 # Updated version
         with:
-          version: latest
-      - name: Cache Docker layers
-        uses: actions/cache@v2.1.7
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.OS }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.OS }}-buildx-
-      - name: Run Buildx
-        run: docker buildx build --cache-from "type=local,src=/tmp/.buildx-cache" --cache-to "type=local,dest=/tmp/.buildx-cache" --build-arg ROOM_ASSISTANT_VERSION=${{needs.release-npm.outputs.new_release_version}} --platform linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64 -t mkerix/room-assistant:${{needs.release-npm.outputs.new_release_version}} -t mkerix/room-assistant:$([[ "${{needs.release-npm.outputs.new_release_version}}" == *"beta"* ]] && echo "beta" || echo "latest") --push .
-      - name: Update description on DockerHub
-        uses: peter-evans/dockerhub-description@v2.4.3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: mkerix/room-assistant
+          context: .
+          platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }} # Use tags from metadata action
+          labels: ${{ steps.meta.outputs.labels }} # Use labels from metadata action
+          build-args: | # Pass release version as build arg
+            ROOM_ASSISTANT_VERSION=${{needs.release-npm.outputs.new_release_version}}
+          cache-from: type=gha # Enable GitHub Actions cache
+          cache-to: type=gha,mode=max # Enable GitHub Actions cache (write)
+          provenance: true # Generate SLSA provenance attestations
+
+      # Removed Update description on DockerHub step
