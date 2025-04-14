@@ -1,7 +1,7 @@
 const mockSocket = {
-  bind: jest.fn(),
-  on: jest.fn(),
-  send: jest.fn(),
+  bind: vi.fn(),
+  on: vi.fn(),
+  send: vi.fn(),
 };
 
 import { networkInterfaces } from 'os';
@@ -13,29 +13,30 @@ import { ClusterConfig } from './cluster.config';
 import { ConfigService } from '../config/config.service';
 import c from 'config';
 import mdns from 'mdns';
-import { mocked } from 'ts-jest/utils';
 
-jest.mock('os');
-jest.mock('dgram', () => {
+import { Mock, vi } from 'vitest';
+
+vi.mock('os');
+vi.mock('dgram', () => {
   return {
-    createSocket: jest.fn().mockReturnValue(mockSocket),
+    createSocket: vi.fn().mockReturnValue(mockSocket),
   };
 });
-jest.useFakeTimers();
+vi.useFakeTimers();
 
-const mockMdns = mocked(mdns);
+const mockMdns = vi.mocked(mdns);
 
 describe('ClusterService', () => {
   let service: ClusterService;
   const mockConfig = { ...new ClusterConfig(), weight: 50 };
   const configService = {
-    get: jest.fn().mockImplementation((key: string) => {
+    get: vi.fn().mockImplementation((key: string) => {
       return key === 'cluster' ? mockConfig : c.get(key);
     }),
   };
 
   beforeAll(async () => {
-    (networkInterfaces as jest.Mock).mockReturnValue({
+    (networkInterfaces as Mock).mockReturnValue({
       lo: [
         {
           address: '127.0.0.1',
@@ -59,7 +60,7 @@ describe('ClusterService', () => {
   });
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule],
@@ -122,7 +123,7 @@ describe('ClusterService', () => {
   });
 
   it('should ignore the quorum if it is not configured', () => {
-    jest.spyOn(service, 'nodes').mockReturnValue({
+    vi.spyOn(service, 'nodes').mockReturnValue({
       abc: {
         state: 'leader',
       } as Node,
@@ -132,7 +133,7 @@ describe('ClusterService', () => {
   });
 
   it('should consider the quorum reached if as many nodes are connected', () => {
-    jest.spyOn(service, 'nodes').mockReturnValue({
+    vi.spyOn(service, 'nodes').mockReturnValue({
       abc: {
         state: 'leader',
       } as Node,
@@ -146,7 +147,7 @@ describe('ClusterService', () => {
   });
 
   it('should not consider the quorum reached if less nodes are connected', () => {
-    jest.spyOn(service, 'nodes').mockReturnValue({
+    vi.spyOn(service, 'nodes').mockReturnValue({
       abc: {
         state: 'leader',
       } as Node,
@@ -157,7 +158,7 @@ describe('ClusterService', () => {
   });
 
   it('should not consider removed nodes for the quorum', () => {
-    jest.spyOn(service, 'nodes').mockReturnValue({
+    vi.spyOn(service, 'nodes').mockReturnValue({
       abc: {
         state: 'removed',
       } as Node,
@@ -171,15 +172,15 @@ describe('ClusterService', () => {
   });
 
   it('should be the majority leader if the quorum is reached', () => {
-    jest.spyOn(service, 'quorumReached').mockReturnValue(true);
-    jest.spyOn(service, 'isLeader').mockReturnValue(true);
+    vi.spyOn(service, 'quorumReached').mockReturnValue(true);
+    vi.spyOn(service, 'isLeader').mockReturnValue(true);
 
     expect(service.isMajorityLeader()).toBeTruthy();
   });
 
   it('should not be the majority leader if the quorum is not reached', () => {
-    jest.spyOn(service, 'quorumReached').mockReturnValue(false);
-    jest.spyOn(service, 'isLeader').mockReturnValue(true);
+    vi.spyOn(service, 'quorumReached').mockReturnValue(false);
+    vi.spyOn(service, 'isLeader').mockReturnValue(true);
 
     expect(service.isMajorityLeader()).toBeFalsy();
   });

@@ -1,0 +1,7 @@
+---
+description: Use this whenever writing database changes
+globs: 
+alwaysApply: false
+---
+- Always write the database change as a "migration", you should check the `migrations` folder in the route for the functionality you're trying to modify. If it's not clear, you should create and/or update a "readme" with a key in the route.
+- All changes should aim to be backwards compatible, or work by first copying and manipulating the data to a new column, and then dropping the old one, in the most efficient way for postgres. 

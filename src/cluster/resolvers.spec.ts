@@ -1,17 +1,19 @@
-const mockExec = jest.fn();
+const mockExec = vi.fn();
 
 import { getAddrInfoDig } from './resolvers';
 import { Service } from 'mdns';
+import { vi } from 'vitest';
+import importActual from 'vitest/import-meta';
 
-jest.mock('util', () => ({
-  ...(jest.requireActual('util') as Record<string, unknown>),
+vi.mock('util', () => ({
+  ...(importActual('util') as Record<string, unknown>),
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   promisify: () => mockExec,
 }));
 
 describe('resolvers', () => {
   beforeEach(async () => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   it('should return a single address correctly', (done) => {

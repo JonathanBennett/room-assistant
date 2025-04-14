@@ -1,0 +1,107 @@
+---
+description: Whenever you're working with localisation / l10n
+globs: 
+alwaysApply: false
+---
+## Cursor Rules for String Descriptions (Internationalization & Accessibility)
+
+This file outlines best practices for providing string descriptions for UI cursors, ensuring internationalization and accessibility.
+
+### 1. Provide Meaningful and Contextual Descriptions
+
+**Rule:** Cursor descriptions should clearly and concisely explain the action that will be performed when the user interacts with the element.
+
+**When you should use:**
+
+* For interactive elements like buttons, links, and form fields.
+* When the visual representation of the element might not be self-explanatory.
+* To reinforce the purpose of an element for all users.
+
+### 2. Use Clear and Simple Language
+
+**Rule:** Employ straightforward language, avoiding jargon or overly technical terms.
+
+**When you should use:**
+
+* For all cursor descriptions, ensuring they are easily understood by a broad audience.
+* Especially important for users with cognitive disabilities or those who are not native speakers of the application's language.
+
+### 3. Be Concise
+
+**Rule:** Keep cursor descriptions brief and to the point.
+
+**When you should use:**
+
+* For all cursor descriptions to avoid overwhelming the user.
+* Screen readers will typically read out the cursor description, so brevity improves the user experience.
+
+### 4. Avoid Ambiguous Language
+
+**Rule:** Ensure the cursor description clearly indicates the outcome of the interaction. Avoid phrases like "Click here" or "More."
+
+**When you should use:**
+
+* For all interactive elements. Instead of "Click here," use descriptions like "Submit form" or "Open document."
+
+### 5. Localize All Cursor Descriptions
+
+**Rule:** Every cursor description must be translated into all supported languages of the application.
+
+**When you should use:**
+
+* In all internationalized applications.
+* Store translatable strings in external resource files, separate from the code.
+
+### 6. Account for Text Expansion
+
+**Rule:** When localizing, be mindful that text length can vary significantly between languages. Ensure UI elements can accommodate longer descriptions without truncation or layout issues.
+
+**When you should use:**
+
+* During the design and development phases of internationalized applications.
+* Test with various languages to identify potential layout problems.
+
+### 7. Support Right-to-Left (RTL) Languages
+
+**Rule:** For languages that read from right to left (e.g., Arabic, Hebrew), ensure that the cursor descriptions and the overall UI layout are mirrored correctly.
+
+**When you should use:**
+
+* In applications that support RTL languages.
+
+### 8. Use Unicode for Global Compatibility
+
+**Rule:** Utilize Unicode to ensure proper rendering of characters across different languages and character sets.
+
+**When you should use:**
+
+* In all applications to support a wide range of languages.
+
+### 9. Test with Assistive Technologies
+
+**Rule:** Regularly test the application with screen readers and other assistive technologies to ensure that cursor descriptions are properly conveyed and enhance accessibility.
+
+**When you should use:**
+
+* Throughout the development process and before releasing new versions of the application.
+
+### 10. Consider Cultural Sensitivity
+
+**Rule:** Be aware that certain words or phrases might have different connotations or be offensive in different cultures.
+
+**When you should use:**
+
+* When writing and translating cursor descriptions for a global audience.
+* Collaborate with localization experts to ensure cultural appropriateness.
+
+By following these guidelines, you can create a more accessible and user-friendly experience for everyone using your application, regardless of their language or abilities.
+
+**References:**
+
+* [Top Strategies for Effective UI Localization - Lingoport](https://lingoport.com/blog/what-are-the-best-approaches-to-localize-ui-strings/)
+* [Rules for Accessibility - Cursor Directory](https://cursor.directory/rules/accessibility)
+* [How to Create Accessible Tooltips (According to WCAG) - Accessibility Widget](https://accessiblyapp.com/blog/tooltip-accessibility/)
+* [Links - Usability & Web Accessibility - Yale University](https://usability.yale.edu/web-accessibility/articles/links)
+* [Accessible text requirements - Windows apps | Microsoft Learn](https://learn.microsoft.com/en-us/windows/apps/design/accessibility/accessible-text-requirements)
+* [Internationalization (i18n) - Refine dev](https://refine.dev/docs/guides-concepts/i18n/)
+* [Internationalization Services for Culture-Specific Requirements | Design System Kit](https://www.telerik.com/design-system/docs/foundation/guides/globalization/internationalization/)

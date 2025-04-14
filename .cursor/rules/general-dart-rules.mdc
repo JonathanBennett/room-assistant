@@ -1,0 +1,29 @@
+---
+description: 
+globs: *.dart
+alwaysApply: false
+---
+- When using "library" directives, you should not add a name as that is depreciated. Example: 
+
+```plaintext
+
+Instead of: 
+
+library buttons;
+
+You would just use
+
+`library;`
+```
+
+- Make sure to always use "FlexBox" https://www.fluttermix.com/docs/widgets/flex:
+
+
+
+- `withOpacity` is deprecated, and you should follow the pattern as laid out in the example: 
+
+```plaintext
+'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.
+```
+
+Always consider localisation when you're creating features.

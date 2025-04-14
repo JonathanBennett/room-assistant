@@ -1,0 +1,111 @@
+---
+description: For use when you need information about how styling is managed in the project, how to define user interfaces, usability, and how to create a new component.
+globs: 
+alwaysApply: false
+---
+## Component Implementation Guide
+
+Follow these steps when implementing a new component in the style system:
+
+### Step 1: Create Component Styles
+
+1. **Create the style file**
+   - Add a new file `lib/style/components/<component_name>.dart`
+   - Import necessary packages (`flutter/material.dart`, `mix/mix.dart`, and token files)
+   - Organize with clear comments and follow established naming conventions
+
+2. **Define variants**
+   - Create `Variant` objects for different states and configurations
+   - Example: `final isPrimary = Variant('primary');`
+   - Group related variants (state variants, style variants, size variants)
+
+3. **Create base style**
+   - Define a main style using `Style()` with base properties
+   - Apply conditional styling using variants
+   - Use Mix utilities like `$box`, `$text`, etc.
+   - Include proper documentation comments
+
+4. **Add specialized styles**
+   - Create styles for sub-components or specific use cases
+   - Ensure consistent padding, spacing, and alignment
+   - Use token values from the token files for consistency
+
+5. **Test styles visually**
+   - Create quick test examples to verify styling
+   - Ensure proper rendering across different sizes and states
+   - Check that variants apply correctly
+
+### Step 2: Create Widget Implementation
+
+1. **Create the widget file**
+   - Add new file `lib/widgets/styled_<component_name>.dart`
+   - Import the component style file with an alias (e.g., `as nav`)
+   - Implement a stateless or stateful widget as appropriate
+
+2. **Define widget properties**
+   - Create properly typed properties with clear documentation
+   - Include required and optional parameters
+   - Add variant boolean properties that map to style variants
+   - Include callback properties for interaction handling
+
+3. **Implement build method**
+   - Apply styles conditionally based on properties
+   - Use `applyVariant` method to apply style variants
+   - Structure widget tree for optimal rendering and accessibility
+   - Handle edge cases and null values gracefully
+
+4. **Add helper methods/widgets**
+   - Create any necessary helper methods or sub-widgets
+   - Encapsulate complex logic in well-named methods
+   - Follow single responsibility principle
+
+5. **Test widget with various inputs**
+   - Test with minimum required properties
+   - Test with all optional properties
+   - Verify interaction callbacks work correctly
+
+### Step 3: Add to Style Example Screen
+
+1. **Create example section**
+   - Add a new method `_build<ComponentName>Section()` to the `StyleExampleScreen` class
+   - Import necessary widget and style files
+   - Add the method call in the main build method with appropriate spacing
+
+2. **Showcase variants and configurations**
+   - Demonstrate all major variants and configurations
+   - Include examples with different states (default, disabled, selected, etc.)
+   - Show examples with varying content types and sizes
+   - Add interactive examples where applicable
+
+3. **Add explanatory text**
+   - Include section headers and subsection headers
+   - Add brief descriptions of the component and its variants
+   - Use consistent text styling for headers and descriptions
+
+4. **Structure examples logically**
+   - Organize from simple to complex examples
+   - Group related examples together
+   - Add proper spacing between examples
+
+### Step 4: Update Documentation
+
+1. **Update the TODO file**
+   - Mark the component as completed in all relevant sections
+   - Change `[ ]` to `[x]` in the progress tracking lists
+   - Update the next steps section if needed
+   - Add the component to the implementation summary @style
+
+2. **Update README if applicable**
+   - Add usage examples and documentation for the new component
+   - Include code snippets for common use cases
+   - Explain available props and their purpose
+
+3. Update the documentation with any specifics about syntax differences you found in the documentation vs your knowledge, in this file under the section "Documentation Differences - Overview".
+
+4. **Never Run and test the app yourself**
+
+### Important: 
+
+We are using Mix for flutter to manage styles, version 1.5.4. You should search the web for the latest documentation on the web if you do not have that version in your knowledge.
+
+You can see the overall requirements of our application, with regard to styles, in [OVERVIEW.md](mdc:docs/overview/OVERVIEW.md)

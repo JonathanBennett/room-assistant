@@ -17,7 +17,7 @@
     "paths": {
       "democracy": ["typings/democracy"]
     },
-    "types": ["node", "canvas"],
+    "types": ["node", "canvas", "vitest/globals"],
     "incremental": true
   },
   "exclude": ["node_modules", "dist"]

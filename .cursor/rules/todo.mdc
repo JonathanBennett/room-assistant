@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+- When you are writing a task you should always investigate the code surface for which you're writing a task about fully using semantic search before suggesting your change, even if that will make you slower.
+- You should always explain, in full, with pseudo code for each task, what the complete change would require. 
+- Each "todo" should be a deliverable unit which can be done in one, leaving the application intact, and completing the tasks in a "layered approach" wherever.
+- You should always follow the @general-dart-rules.mdc, as well as any @mini-apps.mdc, @theme-and-styles-guidance.mdc and @database-and-migrations.mdc.
+
+IMPORTANT: You will *always* edit the central @CONSOLIDATED_TODO.md list, following the rules above, making sure to insert it in the where it naturally makes sense, or extend existing tasks if necessary (and not yet started).
