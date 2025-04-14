@@ -35,8 +35,6 @@ jobs:
         with:
           node-version: 20.x
           cache: 'yarn' # Use yarn for caching
-          # registry-url: 'https://npm.pkg.github.com'
-          # scope: '@jonathanbennett' # Adjust this to match your GitHub username/org
 
       - name: Install Yarn
         run: corepack enable
@@ -44,7 +42,6 @@ jobs:
       # Setup .yarnrc.yml for GitHub Packages
       - name: Setup Yarn for GitHub Packages
         run: |
-          yarn config set npmRegistryServer "https://npm.pkg.github.com"
           yarn config set npmAlwaysAuth true
           yarn config set npmAuthToken "${{ secrets.GITHUB_TOKEN }}"
 
