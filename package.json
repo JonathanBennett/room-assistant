@@ -130,7 +130,7 @@
     "mdns": "^2.7.2",
     "onoff": "^6.0.0",
     "sd-notify": "^2.8.0",
-    "winston-elasticsearch": "^0.16.1",
+    "winston-elasticsearch": "^0.19.0",
     "winston-loki": "^6.0.5"
   },
   "peerDependenciesMeta": {
