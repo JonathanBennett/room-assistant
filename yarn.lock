@@ -2091,7 +2091,7 @@ __metadata:
     bleno: "npm:@abandonware/bleno@^0.5.1-3"
     canvas: "npm:^2.11.2"
     class-transformer: "npm:^0.5.1"
-    class-validator: "npm:^0.13.1"
+    class-validator: "npm:^0.14.0"
     command-line-args: "npm:^5.1.1"
     command-line-usage: "npm:^6.1.1"
     config: "npm:^3.3.6"
@@ -3646,6 +3646,13 @@ __metadata:
   version: 2.0.7
   resolution: "@types/trusted-types@npm:2.0.7"
   checksum: 10c0/4c4855f10de7c6c135e0d32ce462419d8abbbc33713b31d294596c0cc34ae1fa6112a2f9da729c8f7a20707782b0d69da3b1f8df6645b0366d08825ca1522e0c
+  languageName: node
+  linkType: hard
+
+"@types/validator@npm:^13.11.8":
+  version: 13.15.0
+  resolution: "@types/validator@npm:13.15.0"
+  checksum: 10c0/e05ee9fb59c8b3de0f8910b082e43ffebe1202a2f2bfc0390031d788b2fd68880b365b0cb2b9685d4f8458b2d4e09c7cb6e61d4f24031dc05bafd70e9560738f
   languageName: node
   linkType: hard
 
@@ -5778,13 +5785,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"class-validator@npm:^0.13.1":
-  version: 0.13.2
-  resolution: "class-validator@npm:0.13.2"
+"class-validator@npm:^0.14.0":
+  version: 0.14.1
+  resolution: "class-validator@npm:0.14.1"
   dependencies:
-    libphonenumber-js: "npm:^1.9.43"
-    validator: "npm:^13.7.0"
-  checksum: 10c0/e7a1a318967229582b25da9c3b81e316627b014640968824b00bf001f4d79101017b91c59cb3f2c8c0922c4446b5a1114c27ba91aae1c1f109e0ad4d504dfcd5
+    "@types/validator": "npm:^13.11.8"
+    libphonenumber-js: "npm:^1.10.53"
+    validator: "npm:^13.9.0"
+  checksum: 10c0/946e914e47548b5081449c720ea6a4877bac63dc960e14fca4b990b56e64efe3802d12f07ec22d6420c290245b72ea2d646939239f2a3b597794e6c4c2a4f2ae
   languageName: node
   linkType: hard
 
@@ -9510,7 +9518,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"libphonenumber-js@npm:^1.9.43":
+"libphonenumber-js@npm:^1.10.53":
   version: 1.12.6
   resolution: "libphonenumber-js@npm:1.12.6"
   checksum: 10c0/7218d8ce96a19c76c677a89da41c6b55c89c07f64999b464b5fde605d2abfcbefe2afc5bbb13f08be0f5a3dfa9ac27ac9b7ab7b65450563467fa82fb91579389
@@ -14131,7 +14139,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"validator@npm:^13.7.0":
+"validator@npm:^13.9.0":
   version: 13.15.0
   resolution: "validator@npm:13.15.0"
   checksum: 10c0/0f13fd7031ac575e8d7828431da8ef5859bac6a38ee65e1d7fdd367dbf1c3d94d95182aecc3183f7fa7a30ff4474bf864d1aff54707620227a2cdbfd36d894c2
