@@ -2134,7 +2134,7 @@ __metadata:
     typescript: "npm:^5.8.3"
     vitest: "npm:^3.1.1"
     vuepress: "npm:^2.0.0-beta.27"
-    webpack: "npm:^5.53.0"
+    webpack: "npm:^5.99.6"
     winston: "npm:^3.3.3"
     winston-elasticsearch: "npm:^0.16.1"
     winston-loki: "npm:^6.0.5"
@@ -2736,6 +2736,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noble/hashes@npm:^1.1.5":
+  version: 1.8.0
+  resolution: "@noble/hashes@npm:1.8.0"
+  checksum: 10c0/06a0b52c81a6fa7f04d67762e08b2c476a00285858150caeaaff4037356dd5e119f45b2a530f638b77a5eeca013168ec1b655db41bae3236cb2e9d511484fc77
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -2864,6 +2871,15 @@ __metadata:
   version: 1.28.0
   resolution: "@opentelemetry/semantic-conventions@npm:1.28.0"
   checksum: 10c0/deb8a0f744198071e70fea27143cf7c9f7ecb7e4d7b619488c917834ea09b31543c1c2bcea4ec5f3cf68797f0ef3549609c14e859013d9376400ac1499c2b9cb
+  languageName: node
+  linkType: hard
+
+"@paralleldrive/cuid2@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "@paralleldrive/cuid2@npm:2.2.2"
+  dependencies:
+    "@noble/hashes": "npm:^1.1.5"
+  checksum: 10c0/af5826df93de437121308f4f4ce0b2eeb89b60bb57a1a6592fb89c0d40d311ad1d9f3f6a4db2cce6f2bcf572de1aa3f85704254e89b18ce61c41ebb06564c4ee
   languageName: node
   linkType: hard
 
@@ -7807,14 +7823,14 @@ __metadata:
   linkType: hard
 
 "formidable@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "formidable@npm:2.1.2"
+  version: 2.1.4
+  resolution: "formidable@npm:2.1.4"
   dependencies:
+    "@paralleldrive/cuid2": "npm:^2.2.2"
     dezalgo: "npm:^1.0.4"
-    hexoid: "npm:^1.0.0"
     once: "npm:^1.4.0"
     qs: "npm:^6.11.0"
-  checksum: 10c0/efba03d11127098daa6ef54c3c0fad25693973eb902fa88ccaaa203baebe8c74d12ba0fe1e113eccf79b9172510fa337e4e107330b124fb3a8c74697b4aa2ce3
+  checksum: 10c0/905bd0714341e7def83ec36f92aadbc436bbe54559697bf0abf46af6c98ab0962b009ae696f26384f1e69ce5469b99ac8f4f2b6f5161962844432eaba8dd6253
   languageName: node
   linkType: hard
 
@@ -8381,13 +8397,6 @@ __metadata:
     glob: "npm:^7.1.6"
     readable-stream: "npm:^3.6.0"
   checksum: 10c0/8e3f1fa5ec8442a95c7b3ea17bf58549bf36a946e5cbbc144edf549818c51533ec93f62a04cd78ecb34f00fb4424b082509ea5e342921011579f1bc53b7b4ec1
-  languageName: node
-  linkType: hard
-
-"hexoid@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "hexoid@npm:1.0.0"
-  checksum: 10c0/9c45e8ba676b9eb88455631ebceec4c829a8374a583410dc735472ab9808bf11339fcd074633c3fa30e420901b894d8a92ffd5e2e21eddd41149546e05a91f69
   languageName: node
   linkType: hard
 
@@ -12190,6 +12199,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"schema-utils@npm:^4.3.2":
+  version: 4.3.2
+  resolution: "schema-utils@npm:4.3.2"
+  dependencies:
+    "@types/json-schema": "npm:^7.0.9"
+    ajv: "npm:^8.9.0"
+    ajv-formats: "npm:^2.1.1"
+    ajv-keywords: "npm:^5.1.0"
+  checksum: 10c0/981632f9bf59f35b15a9bcdac671dd183f4946fe4b055ae71a301e66a9797b95e5dd450de581eb6cca56fb6583ce8f24d67b2d9f8e1b2936612209697f6c277e
+  languageName: node
+  linkType: hard
+
 "sd-notify@npm:^2.8.0":
   version: 2.8.0
   resolution: "sd-notify@npm:2.8.0"
@@ -14425,12 +14446,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.53.0":
-  version: 5.99.5
-  resolution: "webpack@npm:5.99.5"
+"webpack@npm:^5.99.6":
+  version: 5.99.7
+  resolution: "webpack@npm:5.99.7"
   dependencies:
     "@types/eslint-scope": "npm:^3.7.7"
     "@types/estree": "npm:^1.0.6"
+    "@types/json-schema": "npm:^7.0.15"
     "@webassemblyjs/ast": "npm:^1.14.1"
     "@webassemblyjs/wasm-edit": "npm:^1.14.1"
     "@webassemblyjs/wasm-parser": "npm:^1.14.1"
@@ -14447,7 +14469,7 @@ __metadata:
     loader-runner: "npm:^4.2.0"
     mime-types: "npm:^2.1.27"
     neo-async: "npm:^2.6.2"
-    schema-utils: "npm:^4.3.0"
+    schema-utils: "npm:^4.3.2"
     tapable: "npm:^2.1.1"
     terser-webpack-plugin: "npm:^5.3.11"
     watchpack: "npm:^2.4.1"
@@ -14457,7 +14479,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 10c0/8f5ebea5e2ae7449774d535862348ee564c100350643e4bdd0683fa07eabc058e88a07b7af7176ee4038d03e5172001daf65c16acebf90bc7ba48c08e25e6792
+  checksum: 10c0/e121880d921d5500e9dd61c3428f5d8dca4786c559e7f37488173186447cd22079be677d470a4db1643febf8031b9be900f501c9b95ba94ffe3d2065ad486d31
   languageName: node
   linkType: hard
 
